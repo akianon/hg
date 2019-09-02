@@ -1,13 +1,14 @@
 // ==UserScript==
-// @name        Virginia's Hunger Games Script
+// @name        Virginia's Hunger Games Script+
 // @description Hunger Games hosting made easy
 // @namespace   https://github.com/zmnmxlntr
-// @author      Virginia
-// @version     3.2.0
+// @author      Virginia+Aki
+// @version     3.2.1
 // @downloadURL https://github.com/zmnmxlntr/hg/raw/master/hg.user.js
 // @updateURL   https://github.com/zmnmxlntr/hg/raw/master/hg.user.js
 // @include     /^(https?://)?boards\.4chan(nel)?\.org/.*/(res|thread)/.*$/
 // @include     /^(https?://)?(www\.)?brantsteele\.net/hungergames/(edit|personal)\.php$/
+// @include     /^(https?://)?(www\.)?orteil.dashnet.org/murdergames/*
 // @grant       GM_setValue
 // @grant       GM_getValue
 // ==/UserScript==
@@ -24,6 +25,9 @@
 // ToDO: Lol this shit runs on Firefox Android
 // ToDO: Review unused stuff
 
+
+var mgString = {"teams":[{"name":"NOTEAM"},{"name":"Team Scorpion"},{"name":"Team Rhino"},{"name":"Team Anomalocaris"},{"name":"Team Ox"},{"name":"Team Dragon"},{"name":"Team Whale"},{"name":"Team Lion"},{"name":"Team Yeti"},{"name":"Team Unicorn"},{"name":"Team Polar bear"},{"name":"Team Gorilla"},{"name":"Team Fox"}],"chars":[{"name":"Undine","g":1,"t":0,"pic":"defPic.jpg","team":"Team Scorpion","perks":["peaceful","magic wand"]},{"name":"Eleanor","g":1,"t":0,"pic":"defPic.jpg","team":"Team Scorpion","perks":["inventor","bulky","big stick"]},{"name":"Ingrid","g":1,"t":0,"pic":"defPic.jpg","team":"Team Rhino","perks":["goth","suicidal","pet tiger"]},{"name":"Pete","g":0,"t":0,"pic":"defPic.jpg","team":"Team Rhino","perks":["inventor","leader","big stick"]},{"name":"Vince","g":2,"t":0,"pic":"defPic.jpg","team":"Team Anomalocaris","perks":["rich","unstable","shotgun"]},{"name":"Dennis","g":0,"t":0,"pic":"defPic.jpg","team":"Team Anomalocaris","perks":["lunatic","lasergun"]},{"name":"Bort","g":0,"t":0,"pic":"defPic.jpg","team":"Team Ox","perks":["meek","ancient scepter"]},{"name":"Nathan","g":2,"t":0,"pic":"defPic.jpg","team":"Team Ox","perks":["peaceful","devious","pet tiger"]},{"name":"Odile","g":1,"t":0,"pic":"defPic.jpg","team":"Team Dragon","perks":["lunatic","cute","axe"]},{"name":"Maurice","g":2,"t":0,"pic":"defPic.jpg","team":"Team Dragon","perks":["sociopath","lunatic"]},{"name":"Frank","g":0,"t":0,"pic":"defPic.jpg","team":"Team Whale","perks":["cute","suicidal","pet wolf"]},{"name":"Emett","g":2,"t":0,"pic":"defPic.jpg","team":"Team Whale","perks":["meek","bulky","magic wand"]},{"name":"Xavier","g":0,"t":0,"pic":"defPic.jpg","team":"Team Lion","perks":["sociopath","devious","pet turtle"]},{"name":"Cecilia","g":1,"t":0,"pic":"defPic.jpg","team":"Team Lion","perks":["meek","lunatic","big stick"]},{"name":"Hazel","g":2,"t":0,"pic":"defPic.jpg","team":"Team Yeti","perks":["suicidal","inventor","shotgun"]},{"name":"Xia","g":1,"t":0,"pic":"defPic.jpg","team":"Team Yeti","perks":["seductive","cute","flamethrower"]},{"name":"Rafael","g":2,"t":0,"pic":"defPic.jpg","team":"Team Unicorn","perks":["cute","survivalist"]},{"name":"Gertrude","g":1,"t":0,"pic":"defPic.jpg","team":"Team Unicorn","perks":["sociopath","peaceful","rocket launcher"]},{"name":"Zach","g":0,"t":0,"pic":"defPic.jpg","team":"Team Polar bear","perks":["bulky","unstable","handgun"]},{"name":"Vanilla","g":1,"t":0,"pic":"defPic.jpg","team":"Team Polar bear","perks":["sociopath","bulky","big stick"]},{"name":"Ken","g":0,"t":0,"pic":"defPic.jpg","team":"Team Gorilla","perks":["sociopath","goth","wish ring"]},{"name":"Isaac","g":0,"t":0,"pic":"defPic.jpg","team":"Team Gorilla","perks":["bulky","sociopath","pitchfork"]},{"name":"Zoe","g":1,"t":0,"pic":"defPic.jpg","team":"Team Fox","perks":["kind","devious","pitchfork"]},{"name":"Jen","g":1,"t":0,"pic":"defPic.jpg","team":"Team Fox","perks":["peaceful","inventor","pet tiger"]}]}
+console.log(mgString.chars);
 if(window.location.hostname === "boards.4chan.org" || window.location.hostname === "boards.4channel.org") {
     var hgReapingSize = 24;
     var hgEntriesDrawn = 0;
@@ -206,7 +210,6 @@ if(window.location.hostname === "boards.4chan.org" || window.location.hostname =
 
     function hgSave() {
         const start = new Date().getTime();
-
         hgSize();
 
         let tributeForms = document.getElementsByClassName(class_hgForm);
@@ -244,8 +247,59 @@ if(window.location.hostname === "boards.4chan.org" || window.location.hostname =
         GM_setValue("nomsStr", nomsStr);
         GM_setValue("gensStr", gensStr);
         GM_setValue("imgsStr", imgsStr);
-
         console.log(new Date().getTime() - start);
+    }
+    // MG CODE------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    function mgSave() {
+        const start = new Date().getTime();
+        var tempString = mgString;
+
+        hgSize();
+
+        let tributeForms = document.getElementsByClassName(class_hgForm);
+
+        // If some dumbass clicks save before having drawn forms yet, then draw and hide the forms and save all default values so he doesn't bitch about being a pea-brained illiterate.
+        if(tributeForms.length === 0) {
+            hgDraw();
+            hgHide();
+            tributeForms = document.getElementsByClassName(class_hgForm);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        let nomsStr = "";
+        let gensStr = "";
+        let imgsStr = "";
+
+        // ToDO: Separate into three loops
+        let useFullImgs = GM_getValue("options_fullImages", true);
+        for(let i = 0, count = 0; i < tributeForms.length && count < hgReapingSize; i++) {
+            if(tributeForms[i].getElementsByClassName(class_hgCheckbox)[0].checked === true) {
+                // ToDO: Possibly change retrieval from getElementByWhatever to simple index accesses since we have a set order of elements
+                nomsStr += tributeForms[i].getElementsByClassName(class_hgField)[0].value + "|";
+                tributeForms[i].getElementsByClassName(class_hgGender)[0].checked === true ? tempString.chars[count].g = 0 : tempString.chars[count].g = 1;
+                tempString.chars[count].name = tributeForms[i].getElementsByClassName(class_hgField)[0].value;
+                tempString.chars[count].pic= tributeForms[i].parentElement.getElementsByClassName("fileThumb")[0].href;
+
+                if(useFullImgs === true) {
+                    console.log(count);
+                  //  imgsStr += tributeForms[i].parentElement.getElementsByClassName("fileThumb")[0].href + "|";
+                } else {
+                   // imgsStr += tributeForms[i].parentElement.getElementsByTagName("img")[0].src + "|";
+                }
+
+                count++;
+            }
+        }
+
+        //GM_setValue("reapingSize", hgReapingSize);
+        //GM_setValue("nomsStr", nomsStr);
+        //GM_setValue("gensStr", gensStr);
+       // GM_setValue("imgsStr", imgsStr);
+        GM_setValue("mgString", tempString);
+       // console.log(GM_getValue("imgsStr"));
+        console.log(new Date().getTime() - start);
+        console.log(tempString);
+
     }
 
     //================================================================================================================//
@@ -541,6 +595,7 @@ if(window.location.hostname === "boards.4chan.org" || window.location.hostname =
     hgCtrls_div.appendChild(hgUpcoming_button);
     hgCtrls_div.appendChild(hgSettings_div);
     hgCtrls_div.appendChild(hgUpcoming_div);
+    hgCtrls_div.appendChild(hgCreateElement_Button("Save for murder games", "Save the entries for murder games", function() { mgSave(); }));
 
     document.getElementsByTagName("body")[0].appendChild(hgCtrls_div);
 
@@ -637,4 +692,23 @@ if(window.location.hostname === "boards.4chan.org" || window.location.hostname =
     } else {
         document.getElementsByTagName("body")[0].prepend(hgLoad_button);
     }
+}else if(window.location.hostname == "orteil.dashnet.org" || window.location.hostname == "www.orteil.dashnet.org") {
+function mgLoad(){
+        let importString = GM_getValue("mgString");
+        console.log(importString);
+    /*var tempString = document.createElement("div");
+    tempString.value = importString;
+    var str = tempString.value;
+     document.getElementsByTagName("body")[0].prepend(JSON.stringify(str));
+*/
+    document.getElementById("textareaPrompt").value = JSON.stringify(importString);
+}
+    /*var mgLoad_button = document.createElement("button");
+    mgLoad_button.type = "button";
+    mgLoad_button.innerHTML = "Load";
+    mgLoad_button.onclick = function() { mgLoad(); };
+    document.getElementsByTagName("body")[0].prepend(mgLoad_button); */
+    document.getElementById("importSetup").addEventListener("click", function(){
+        mgLoad();
+});
 }
