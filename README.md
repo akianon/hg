@@ -4,14 +4,14 @@ Works in Firefox, Chrome/Chromium, and Opera, with or without 4chan X. Not teste
 
 # Installation
 ### Firefox
-Install the [Tampermonkey](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/) extension, then **[click here](https://github.com/zmnmxlntr/hg/raw/master/hg.user.js)**, then click "Install".
+Install the [Tampermonkey](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/) extension, then **[click here](https://github.com/akianon/hg/raw/master/hg.user.js)**, then click "Install".
 <br/>*NOTE: It is recommended to install Tampermonkey rather than Greasemonkey, as the latter is currently bugged.*
 
 ### Chrome/Chromium
-Install the [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) extension, then **[click here](https://github.com/zmnmxlntr/hg/raw/master/hg.user.js)**, then click "Install".
+Install the [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) extension, then **[click here](https://github.com/akianon/hg/raw/master/hg.user.js)**, then click "Install".
 
 ### Opera
-Install the [Violent monkey](https://addons.opera.com/en/extensions/details/violent-monkey/) extension, then **[click here](https://github.com/zmnmxlntr/hg/raw/master/hg.user.js)**, then click "Confirm installation".
+Install the [Violent monkey](https://addons.opera.com/en/extensions/details/violent-monkey/) extension, then **[click here](https://github.com/akianon/hg/raw/master/hg.user.js)**, then click "Confirm installation".
 
 #
 Doesn't seem to work on Safari. If you actually want it to, contact me and tell me as much and I'll give it a shot.
