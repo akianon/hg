@@ -403,11 +403,10 @@ if(window.location.hostname === "boards.4chan.org" || window.location.hostname =
     }
 
     //================================================================================================================//
-    //== Tributes known to be grills =================================================================================//
+        //== Tributes known to be grills =================================================================================//
     //================================================================================================================//
-
-    const grills = [ "megumi", "megumin", "sakuya", "unlucky girl", "unfortunate girl", "guild girl", "queen boo", "madotsuki", "hedenia", "reimu", "dorothy haze", "lain", "rebecca", "marin", "alien queen", "frisk", "kaokuma", "sayori", "dog tier jade" ];
-
+ 
+const grills = [ "megumi", "megumin", "sakuya", "unlucky girl", "unfortunate girl", "guild girl", "queen boo", "madotsuki", "hedenia", "reimu", "dorothy haze", "lain", "rebecca", "marin", "alien queen", "frisk", "kaokuma", "sayori", "dog tier jade" , "dragon cunt", "X-23", "haruhi", "mao mao"];
     //================================================================================================================//
     //== Options and Settings Creation ===============================================================================//
     //================================================================================================================//
